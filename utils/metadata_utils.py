@@ -1,3 +1,4 @@
+import os
 
 
 def get_metadata():
@@ -45,10 +46,10 @@ def get_metadata():
     connection = MySQLdb.connect(
             **{
                 "port": 3306,
-                "user": user,
-                "passwd": password,
-                "host": host,
-                "db": db
+                "user": os.environ.get("MYSQL_USER", "user"),
+                "passwd": os.environ.get("MYSQL_PASSWD", "password"),
+                "host": os.environ.get("MYSQL_HOST", "host"),
+                "db": os.environ.get("MYSQL_DB", "db"),
             }
         )
 

@@ -1,17 +1,10 @@
-import os
+import os.path
+import yaml
+import MySQLdb
 
 
-def get_metadata():
+def get_tables(tables_file):
     # Reading tables.yaml, extracting tables to be split
-
-    import yaml
-
-    path = "dags/conf"
-    tables_file = f"{path}/tables.yaml"
-    tables_split_file = f"{path}/tables_split.yaml"
-    split_row_count = 500000
-    default_split_parts = 10
-
     sql_table_names = {
         "backend.accounts_payment": "shapeupclub.accounts_payment",
         "backend.dietsettings": "shapeupclub.diary_dietsetting",
@@ -26,7 +19,7 @@ def get_metadata():
         except yaml.YAMLError as exc:
             print(exc)
 
-    tables_with_metadata = {}
+    tables = {}
     for group, table_names in parsed_yaml.items():
         if (group.endswith("_split")):
             for table_name in table_names:
@@ -35,14 +28,14 @@ def get_metadata():
                     sql_db_table_split = sql_db_table.split(".")
                     sql_db = sql_db_table_split[0]
                     sql_table = sql_db_table_split[1]
-                    tables_with_metadata[table_name] = {"sql_db": sql_db, "sql_table": sql_table}
+                    tables[table_name] = {"sql_db": sql_db, "sql_table": sql_table}
 
-    print(tables_with_metadata)
+    print(tables)
+    return tables
 
+
+def get_metadata(tables):
     # SQL connection setup
-
-    import MySQLdb
-
     connection = MySQLdb.connect(
             **{
                 "port": 3306,
@@ -54,8 +47,7 @@ def get_metadata():
         )
 
     # Select data
-
-    for table, metadata in tables_with_metadata.items():
+    for table, metadata in tables.items():
         print(f"""Getting metadata for {metadata.get("sql_db")}.{metadata.get("sql_table")} table.""")
 
         sql = f"""
@@ -74,18 +66,40 @@ def get_metadata():
 
         cursor = connection.cursor()
         cursor.execute(sql)
-        result = cursor.fetchall()
+        result = cursor.fetchone()
         cursor.close()
-        for row in result:
-            print(f"count = {int(row[0])}, size = {float(row[1])} MB")
+        print(f"count = {int(result[0])}, size = {float(result[1])} MB")
 
-        tables_with_metadata[table]["count"] = int(row[0])
-        tables_with_metadata[table]["size_mb"] = float(row[1])
+        tables[table]["count"] = int(result[0])
+        tables[table]["size_mb"] = float(result[1])
 
+    connection.close()
+
+    print(tables)
+    return tables
+
+
+def write_metadata(tables_split_file, metadata):
     # Writing values into tables_counts.yaml
-
     with open(tables_split_file, "w") as file:
-        documents = yaml.dump(tables_with_metadata, file, indent = 4, sort_keys = False)
+        documents = yaml.dump(metadata, file, indent = 4, sort_keys = False)
+
 
 if __name__ == '__main__':
-    get_metadata()
+    path = "dags/conf"
+    tf = f"{path}/tables.yaml"
+    tsf = f"{path}/tables_split.yaml"
+
+    if os.path.isfile("env/env.py"):
+        print("Souring environment variables")
+        from env.env import init_env
+        init_env()
+    else:
+        print("File does not exist")
+
+    print(os.environ.get("MYSQL_HOST", "host"))
+    print(os.environ.get("MYSQL_DB", "db"))
+
+    tbls = get_tables(tf)
+    #mtd = get_metadata(tbls)
+    #write_metadata(tsf, mtd)

@@ -43,7 +43,7 @@ def get_metadata(tables):
                 "passwd": os.environ.get("MYSQL_PASSWD", "password"),
                 "host": os.environ.get("MYSQL_HOST", "host"),
                 "db": os.environ.get("MYSQL_DB", "db"),
-                "ssl": False
+                "ssl": {}
             }
         )
 

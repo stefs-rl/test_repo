@@ -91,15 +91,12 @@ if __name__ == '__main__':
     tsf = f"{path}/tables_split.yaml"
 
     if os.path.isfile("env/env.py"):
-        print("Souring environment variables")
+        print("Env file does exist, pulling the environment variables locally.")
         from env.env import init_env
         init_env()
     else:
-        print("File does not exist")
-
-    print(os.environ.get("MYSQL_HOST", "host"))
-    print(os.environ.get("MYSQL_DB", "db"))
+        print("Env file does not exist, pulling the environment variables from server.")
 
     tbls = get_tables(tf)
-    #mtd = get_metadata(tbls)
+    mtd = get_metadata(tbls)
     #write_metadata(tsf, mtd)

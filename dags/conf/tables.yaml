@@ -1,0 +1,17 @@
+dummy:
+    - dummy.table_1
+    - dummy.table_2
+    - dummy.table_3
+
+backend_split:
+    - backend.accounts_payment
+    - backend.dietsettings
+    - backend.food_food
+    - backend.food_mealitem
+    - backend.tbluser
+
+backend_partitioned:
+    - backend.table_1
+    - backend.table_2
+    - backend.table_3
+    - backend.table_4

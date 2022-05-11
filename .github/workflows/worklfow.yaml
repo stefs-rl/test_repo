@@ -1,0 +1,11 @@
+name:
+    CI/CID
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    build:
+        runs-on:

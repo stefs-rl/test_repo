@@ -33,4 +33,4 @@ jobs:
                   MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
                   MYSQL_DB: ${{ secrets.MYSQL_DB }}
               run: |
-                  python utils/metada_utils.py
+                  python utils/metadata_utils.py

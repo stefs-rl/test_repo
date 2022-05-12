@@ -1,0 +1,18 @@
+# Add comments here
+
+backend_split:
+    backend.accounts_payment:
+        sql_db: shapeupclub
+        sql_table: accounts_payment
+    backend.dietsettings:
+        sql_db: shapeupclub
+        sql_table: diary_dietsetting
+    backend.food_food:
+        sql_db: shapeupclub
+        sql_table: tblfood
+    backend.food_mealitem:
+        sql_db: shapeupclub
+        sql_table: tblmealitem
+    backend.tbluser:
+        sql_db: shapeupclub
+        sql_table: tbluser

@@ -34,11 +34,14 @@ jobs:
                   MYSQL_DB: ${{ secrets.MYSQL_DB }}
               run: |
                   python utils/metadata_utils.py
-            - name: Set AWS credentials
-              uses: aws-actions/configure-aws-credentials@v1
-              with:
-                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                  aws-region: eu-north-1
-            - name: Copy data to S3 bucket
-              run: aws s3 sync ./dags/. s3://testmysqlbucket/dags
+            - name: Printing the metadata here
+              run: |
+                  cat dags/conf/tables_metadata.yaml
+            #- name: Set AWS credentials
+            #  uses: aws-actions/configure-aws-credentials@v1
+            #  with:
+            #      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            #      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            #      aws-region: eu-north-1
+            #- name: Copy data to S3 bucket
+            #  run: aws s3 sync ./dags/. s3://testmysqlbucket/dags

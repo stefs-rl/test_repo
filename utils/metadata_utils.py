@@ -42,7 +42,7 @@ def get_metadata(tables):
                 "user": os.environ.get("MYSQL_USER", "user"),
                 "passwd": os.environ.get("MYSQL_PASSWD", "password"),
                 "host": os.environ.get("MYSQL_HOST", "host"),
-                "db": os.environ.get("MYSQL_DB", "db"),
+                "db": os.environ.get("MYSQL_DB", "shapeupclub"),
                 "ssl": False
             }
         )
